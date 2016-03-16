@@ -1,0 +1,57 @@
+/*********************************************************************************
+*FileName:  62&&4
+  *Author:  Will
+  *Version:  1.0
+  *Date:  2016.3.2
+**********************************************************************************/#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+#define rep(a,b,c) for(int a=b;a<c;a++)
+int dp[10][10];
+int bits[10];
+
+void getdp()
+{
+  memset(dp,0,sizeof(dp));
+  dp[0][0]=1;
+  rep(i,1,7) rep(j,0,10) rep(k,0,10) 
+  if(j!=4&&!(j==6&&k==2)) dp[i][j]+=dp[i-1][k];
+}
+
+int cal(int a)
+{
+  int l=0;
+  while(a)
+  {
+    bits[l++]=a%10;
+    a/=10;
+  }   
+  int ans=0;
+  for(int i=l;i>0;i--)  //最高位 
+  {
+    rep(j,0,bits[i-1]) 
+    {
+     if(j!=4&&(!(j==2&&bits[i]==6))) 
+     ans+=dp[i][j];
+    }
+    if(bits[i-1]==4||(bits[i]==6&&bits[i-1]==2)) break;
+  }
+  return ans;
+}
+
+int main()
+{
+  int m,n;
+  getdp();
+  cin>>m>>n;
+  int s1=cal(n);
+  int s2=cal(m-1);
+  cout<<s1<<endl;
+  cout<<s2<<endl;
+  cin>>m;
+  return 0;
+} 
+
+
