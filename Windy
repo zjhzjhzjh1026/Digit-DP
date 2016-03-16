@@ -1,0 +1,60 @@
+/*********************************************************************************
+*FileName:  Windy Number
+  *Author:  Will
+  *Version:  1.0
+  *Date:  2016.3.1
+**********************************************************************************/
+
+#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+#define rep(a,b,c) for(int a=b;a<c;a++)
+
+int dp[11][10];
+int bits[11];
+
+void getdp()  //计算出dp数组 
+{
+   memset(dp,0,sizeof(dp));  //func 
+   rep(i,0,10) dp[1][i]=1;
+   rep(i,2,11) rep(j,0,10) rep(k,0,10) if(abs(j-k)>1) dp[i][j]+=dp[i-1][k];      
+}
+
+int cal(int a)
+{
+   rep(i,0,11) bits[i]=-1;
+   int l=0;
+   while(a)  //将a各位放入数组bits中，l为a的位数 
+   {
+     bits[l++]=a%10;
+     a/=10;
+   }   
+   int ans=0;
+   rep(i,1,l) rep(j,1,10) ans+=dp[i][j];  //位数小于l的windy数 
+   rep(j,1,bits[l-1])
+     ans+=dp[l][j];  //位数等于l但最高位小于原数最高位的windy数
+   for(int i=l-1;i>0;i--)
+   {
+      rep(j,0,bits[i-1]) 
+      {
+        if(abs(j-bits[i]>1)) ans+=dp[i][j];     
+      }
+      if(abs(bits[i]-bits[i-1])<2) break;  //当i-1被讨论完后，即I-1和I位都跟原数一样了，这时候差小于2，既后续已经没有讨论的必要了   
+   }
+   return ans; 
+}
+
+
+int main()
+{
+  int a,b;
+  cin>>a>>b;
+  getdp();  
+  int s1,s2;  
+  s1=cal(b);
+  s2=cal(a);
+  cout<<s1-s2<<endl;
+  cin>>a;
+} 
