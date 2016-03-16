@@ -1,0 +1,61 @@
+/*********************************************************************************
+*FileName:  49
+  *Author:  Will
+  *Version:  1.0
+  *Date:  2016.3.3
+**********************************************************************************/
+
+#include<iostream>
+
+using namespace std;
+
+#define rep(a,b,c) for(int a=b; a<c; a++)
+#define ll long long int
+
+int dp[20][10];
+int bits[20];
+
+void getdp()     //dp中的是不含49的个数！！！！不含！！不含！！不含！！这种统计算法只能逆向(不含XX情况)！！ 
+{
+  memset(dp,0,sizeof(dp));                      
+  dp[0][0]=1;
+  rep(i,1,20) rep(j,0,10) rep(k,0,10)
+  {
+    if(!(j==4&&k==9)) dp[i][j]+=dp[i-1][k];
+  }
+}
+
+int cal(int a)
+{
+  int l=0;
+  while(a)
+  {
+    bits[l++]=a%10;
+    a/=10;
+  }
+  int ans=0;
+  for(int i=l;i>0;i--)
+  {
+     rep(j,0,bits[i-1])
+     {
+       if(!(j==9&&bits[i]==4)) ans+=dp[i][j];
+     }
+     if(!(bits[i]==4&&bits[i-1]==9)) break;
+  }   
+  return ans;  
+}
+
+int main()
+{
+  getdp();
+  int m,t;
+  cin>>t;
+  while(t--)
+{
+  cin>>m;
+  int s1=m;
+  s1-=cal(m);
+  cout<<s1<<endl; 
+}  
+  return 0;
+} 
